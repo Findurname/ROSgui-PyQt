@@ -13,7 +13,7 @@ from std_msgs.msg import String
 from sensor_msgs.msg import Image
 from sensor_msgs.msg import CompressedImage
 from cv_bridge import CvBridge
-
+import cv2
 
 ### DECLARING VARIABLES ###
 global data, contS, contP, str_contS, str_contP
@@ -142,9 +142,9 @@ class Ui_MainWindow(object):
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
 
+        self.bridge = CvBridge()            
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-        self.bridge = CvBridge()            
     def retranslateUi(self, MainWindow):
 	### GUI MODIFICATIONS ###
         _translate = QtCore.QCoreApplication.translate
@@ -163,6 +163,7 @@ class Ui_MainWindow(object):
 	
 	### DECLARING FUNCTIONS ###
         self.subCallback(data)
+        # self.subImgCb(data)
         self.listener()
         self.pushButton_Reset.clicked.connect(self.reset)
         self.pushButton_Pub.clicked.connect(self.publish)
@@ -175,10 +176,12 @@ class Ui_MainWindow(object):
         self.label_Data_Sub.setText(text_sub)
         self.label_Data_ContS.setText(str_contS)
     def subImgCb(self, data):
-        pass
+        # pass
         cv_image = self.bridge.imgmsg_to_cv2(data, desired_encoding='passthrough')
-        
         print(cv_image.shape)
+        cv_image = cv2.cvtColor(cv_image, cv2.COLOR_BGR2RGB)
+        # cv2.imshow(" test", cv_image)
+        # cv2.waitKey(10)
 
     def listener(self):
         rospy.init_node('ROSgui', anonymous=True)
