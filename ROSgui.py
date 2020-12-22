@@ -183,6 +183,7 @@ class Ui_MainWindow(object):
     def listener(self):
         rospy.init_node('ROSgui', anonymous=True)
         rospy.Subscriber('chatter', String, self.subCallback)
+        rospy.Subscriber('/usb_cam/image_raw', Image, self.subImgCb)
 
     def reset(self):
         global contS, contP, str_contS
